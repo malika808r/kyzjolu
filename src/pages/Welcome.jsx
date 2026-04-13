@@ -1,162 +1,226 @@
-import { useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Heart, Users, Zap } from 'lucide-react';
-import { Button } from '../components/ui/button';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Globe, ArrowRight } from 'lucide-react';
+import { useAppStore } from '../store/store';
+import i18nConfig from '../i18n/config';
 
-const features = [
-  {
-    icon: Heart,
-    title: 'Безопасность',
-    description: 'SOS кнопка с мгновенной отправкой координат',
-  },
-  {
-    icon: MapPin,
-    title: 'Умная карта',
-    description: 'Видь безопасные места и попутчиц вокруг',
-  },
-  {
-    icon: Users,
-    title: 'Сообщество',
-    description: 'Найди поддержку и новых подруг',
-  },
-  {
-    icon: Zap,
-    title: 'Развитие',
-    description: 'Благодаря воркшопам и курсам для профессионального роста',
-  },
+const PHOTOS = [
+  'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80',
+  'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80',
+  'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=600&q=80',
+  'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=600&q=80',
+  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
+  'https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?w=600&q=80',
 ];
 
 export default function Welcome() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { language, setLanguage } = useAppStore();
+
+  const [wordIndex, setWordIndex] = useState(0);
+  const animatedWords = t('welcomeHero.animatedWords', { returnObjects: true }) || ['Безопасность', 'Умная карта', 'Комьюнити', 'Обучение'];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % animatedWords.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const toggleLanguage = () => {
+    const langs = ['ru', 'en', 'ky'];
+    const next = langs[(langs.indexOf(language) + 1) % langs.length];
+    setLanguage(next);
+    i18nConfig.changeLanguage(next);
+  };
+
+  // Настройка пружинистой анимации для сборки мозаики
+  const springAnim = { type: "spring", stiffness: 100, damping: 15 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Hero Section */}
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
-        <div className="text-center mb-12">
-          <div className="mb-6">
-            <span className="text-6xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-              KyzJolu
-            </span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Твоя безопасность — наш приоритет
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Платформа для девушек, которая обеспечивает безопасность, поддержку сообщества и профессиональный рост в городской среде
-          </p>
-        </div>
+    <div className="relative w-screen h-screen overflow-hidden bg-[#FDFCFF] flex flex-col font-sans">
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-          <Button
-            onClick={() => navigate('/auth/login')}
-            className="px-8 py-6 text-lg bg-pink-500 hover:bg-pink-600 text-white rounded-lg font-semibold"
+      {/* ── Ambient blobs ── */}
+      <div className="pointer-events-none absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full bg-pink-100 blur-[140px] opacity-60" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full bg-lime-100 blur-[140px] opacity-50" />
+
+      {/* ── HEADER ── */}
+      <header className="relative z-50 shrink-0 w-full flex items-center justify-between px-8 md:px-16 py-5 border-b border-slate-100/70">
+        <motion.div
+          initial={{ opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3"
+        >
+          <div className="w-9 h-9 rounded-xl overflow-hidden shadow border border-pink-100">
+            <img src="/photo_2026-04-02_23-26-19.jpg" alt="logo" className="w-full h-full object-cover" />
+          </div>
+          <span className="font-black text-lg text-slate-800 tracking-tight">KyzJolu</span>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 16 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center gap-3"
+        >
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full border border-slate-200 shadow-sm text-slate-800 text-xs font-bold uppercase tracking-wide hover:border-pink-300 transition-colors"
           >
-            Вход
-          </Button>
+            <Globe size={14} className="text-pink-400" />
+            {language}
+          </button>
+          <button
+            onClick={() => navigate('/auth/login')}
+            className="text-sm font-bold text-slate-800 hover:text-black transition-colors"
+          >
+            {t('welcomeHero.loginLink')}
+          </button>
           <button
             onClick={() => navigate('/auth/register')}
-            className="px-8 py-6 text-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-foreground border-2 border-pink-500 rounded-lg font-semibold transition-colors"
+            className="px-4 py-2 bg-gradient-to-r from-pink-500 to-lime-500 text-white text-sm font-black rounded-full shadow-md shadow-pink-200/50 hover:opacity-90 active:scale-95 transition-all"
           >
-            Регистрация
+            {t('welcomeHero.joinBtn')}
           </button>
-        </div>
+        </motion.div>
+      </header>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div
-                key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow"
+      {/* ── BODY: Split Layout ── */}
+      <div className="relative z-10 flex-1 flex overflow-hidden">
+
+        {/* LEFT COLUMN — Hero Text */}
+        <div className="flex-1 flex flex-col justify-center px-8 md:px-16 xl:px-24 py-10 min-w-0">
+          <motion.div
+            initial={{ opacity: 0, y: 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <h1 className="text-4xl md:text-5xl xl:text-6xl font-black text-slate-900 leading-[1.1] tracking-tight mb-2">
+              {t('welcomeHero.title')}
+            </h1>
+
+            <div className="h-12 md:h-16 mb-6 overflow-hidden flex items-center">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={wordIndex}
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -30, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="text-3xl md:text-4xl xl:text-5xl font-black bg-gradient-to-r from-pink-500 to-lime-500 bg-clip-text text-transparent"
+                >
+                  {animatedWords[wordIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+
+            <p className="text-slate-800 text-base md:text-lg leading-relaxed max-w-lg mb-10 font-medium mt-2">
+              {t('welcomeHero.subtitle')}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 mb-12">
+              <motion.button
+                onClick={() => navigate('/auth/register')}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                className="h-14 px-8 rounded-full bg-gradient-to-r from-pink-500 via-emerald-500 to-lime-500 text-white text-base font-black shadow-xl shadow-pink-200/60 flex items-center gap-2 group hover:shadow-2xl hover:shadow-pink-200/70 transition-shadow"
               >
-                <div className="flex items-start gap-4">
-                  <div className="p-3 bg-pink-100 dark:bg-pink-900/20 rounded-lg">
-                    <Icon size={28} className="text-pink-500" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">
-                      {feature.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {feature.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Stats Section */}
-        <div className="grid grid-cols-3 gap-4 bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-pink-500 mb-1">500K+</div>
-            <div className="text-sm text-muted-foreground">Девушек</div>
-          </div>
-          <div className="text-center border-l border-r border-gray-200 dark:border-gray-700">
-            <div className="text-3xl font-bold text-pink-500 mb-1">100+</div>
-            <div className="text-sm text-muted-foreground">Городов</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-pink-500 mb-1">24/7</div>
-            <div className="text-sm text-muted-foreground">Поддержка</div>
-          </div>
-        </div>
-
-        {/* Testimonials */}
-        <div className="mt-16 bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-xl p-8">
-          <h2 className="text-2xl font-bold text-center mb-8 text-foreground">
-            Что говорят пользователи
-          </h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
-              <div className="flex gap-1 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400">★</span>
-                ))}
-              </div>
-              <p className="text-muted-foreground mb-4">
-                "Чувствую себя в безопасности благодаря SOS кнопке. Это приложение изменило, как я кораблюсь в городе."
-              </p>
-              <p className="font-semibold text-foreground">— Айгуль, Бишкек</p>
+                {t('welcomeHero.joinBtn')}
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <ArrowRight size={18} />
+                </motion.span>
+              </motion.button>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6">
-              <div className="flex gap-1 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <span key={i} className="text-yellow-400">★</span>
-                ))}
-              </div>
-              <p className="text-muted-foreground mb-4">
-                "Нашла друзей и наставников в IT. Сообщество очень поддерживающее!"
-              </p>
-              <p className="font-semibold text-foreground">— Марина, Алматы</p>
+          </motion.div>
+        </div>
+
+        {/* RIGHT COLUMN — Animated Photo mosaic */}
+        <div className="hidden lg:flex w-[45%] xl:w-[50%] shrink-0 p-8 xl:p-12 items-center justify-center">
+          <div className="relative w-full h-full max-h-[600px]">
+            <div className="grid grid-cols-3 grid-rows-3 gap-3 w-full h-full">
+
+              {/* Левая большая картинка (Вылетает слева-сверху) */}
+              <motion.div
+                initial={{ opacity: 0, x: -80, y: -40 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                transition={{ ...springAnim, delay: 0.2 }}
+                className="row-span-2 rounded-[28px] overflow-hidden shadow-xl"
+              >
+                <img src={PHOTOS[0]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+
+              {/* Верхняя центральная (Вылетает сверху) */}
+              <motion.div
+                initial={{ opacity: 0, y: -80 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ ...springAnim, delay: 0.3 }}
+                className="rounded-[28px] overflow-hidden shadow-md"
+              >
+                <img src={PHOTOS[1]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+
+              {/* Верхняя правая (Вылетает справа-сверху) */}
+              <motion.div
+                initial={{ opacity: 0, x: 80, y: -40 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                transition={{ ...springAnim, delay: 0.4 }}
+                className="rounded-[28px] overflow-hidden shadow-md"
+              >
+                <img src={PHOTOS[2]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+
+              {/* Правая центральная (Вылетает справа) */}
+              <motion.div
+                initial={{ opacity: 0, x: 80 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ ...springAnim, delay: 0.5 }}
+                className="rounded-[28px] overflow-hidden shadow-md"
+              >
+                <img src={PHOTOS[3]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+
+              {/* Нижняя левая средняя (Вылетает слева-снизу) */}
+              <motion.div
+                initial={{ opacity: 0, x: -80, y: 80 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                transition={{ ...springAnim, delay: 0.6 }}
+                className="col-span-2 rounded-[28px] overflow-hidden shadow-xl"
+              >
+                <img src={PHOTOS[4]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+
+              {/* Самая нижняя широкая (Вылетает строго снизу) */}
+              <motion.div
+                initial={{ opacity: 0, y: 100 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ ...springAnim, delay: 0.7 }}
+                className="col-span-3 rounded-[28px] overflow-hidden shadow-md"
+              >
+                <img src={PHOTOS[5]} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+
             </div>
           </div>
         </div>
 
-        {/* Trust Section */}
-        <div className="mt-16 text-center">
-          <p className="text-muted-foreground mb-4">Доверяется компаниями и организациями</p>
-          <div className="flex justify-center items-center gap-8 flex-wrap opacity-50">
-            <span className="font-semibold">TechGirls Kyrgyzstan</span>
-            <span className="font-semibold">IT Salon</span>
-            <span className="font-semibold">Women in Tech</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="mt-20 border-t border-gray-200 dark:border-gray-700 py-8 px-4">
-        <div className="max-w-4xl mx-auto text-center text-muted-foreground text-sm">
-          <p>
-            &copy; 2024 KyzJolu. Все права защищены. | 
-            <a href="#" className="hover:text-primary ml-2">Политика конфиденциальности</a> | 
-            <a href="#" className="hover:text-primary ml-2">Условия использования</a>
-          </p>
+        {/* MOBILE: Анимированная лента для телефонов */}
+        <div className="lg:hidden absolute bottom-[80px] left-0 right-0 flex gap-3 px-6 overflow-x-auto no-scrollbar pointer-events-none">
+          {PHOTOS.slice(0, 4).map((src, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: 60 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ ...springAnim, delay: 0.2 + i * 0.15 }}
+              className="w-20 h-20 rounded-2xl overflow-hidden shadow-md shrink-0"
+            >
+              <img src={src} alt="" className="w-full h-full object-cover" />
+            </motion.div>
+          ))}
         </div>
       </div>
     </div>

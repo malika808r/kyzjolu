@@ -192,3 +192,7 @@ export function FindCompanion() {
     </div>
   );
 }
+
+
+
+export default FindCompanion;

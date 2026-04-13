@@ -35,9 +35,9 @@ const mockEvents = [
 
 const categories = [
   { id: 'all', label: 'Все', color: 'bg-gray-100 text-gray-800' },
-  { id: 'tech', label: 'Технологии', color: 'bg-blue-100 text-blue-800' },
+  { id: 'tech', label: 'Технологии', color: 'bg-lime-100 text-lime-800' },
   { id: 'education', label: 'Обучение', color: 'bg-green-100 text-green-800' },
-  { id: 'design', label: 'Дизайн', color: 'bg-purple-100 text-purple-800' },
+  { id: 'design', label: 'Дизайн', color: 'bg-lime-100 text-lime-800' },
   { id: 'networking', label: 'Нетворкинг', color: 'bg-pink-100 text-pink-800' },
 ];
 
@@ -97,7 +97,7 @@ export default function HomeMap() {
       {/* Map Container */}
       <div className="flex-1 relative">
         {/* Mock Map Background */}
-        <div className="w-full h-full bg-gradient-to-br from-blue-50 to-green-50 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
+        <div className="w-full h-full bg-gradient-to-br from-lime-50 to-green-50 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
           <div className="text-center text-muted-foreground">
             <MapPin size={48} className="mx-auto mb-2" />
             <p>Карта мероприятий</p>

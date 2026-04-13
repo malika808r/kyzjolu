@@ -15,7 +15,7 @@ const slides = [
     title: 'Найди своё место',
     description: 'Используй карту для поиска мероприятий и сообществ рядом с тобой',
     icon: MapPin,
-    color: 'text-blue-500',
+    color: 'text-lime-500',
   },
   {
     title: 'Присоединяйся к сообществу',
@@ -27,7 +27,7 @@ const slides = [
     title: 'Развивайся вместе',
     description: 'Получай доступ к образовательным материалам и курсам',
     icon: GraduationCap,
-    color: 'text-purple-500',
+    color: 'text-lime-500',
   },
 ];
 
@@ -35,11 +35,14 @@ export default function Onboarding() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
+  // ... импорты остаются ...
+
   const nextSlide = () => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
     } else {
-      navigate('/app/feed');
+      // Добавляем переход на страницу входа/регистрации!
+      navigate('/auth/register'); 
     }
   };
 
@@ -51,7 +54,7 @@ export default function Onboarding() {
   const Icon = slide.icon;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-lime-50 dark:from-gray-900 dark:to-gray-800 flex flex-col">
       <div className="flex-1 flex flex-col items-center justify-center px-6">
         <div className="text-center mb-8">
           <div className={cn(

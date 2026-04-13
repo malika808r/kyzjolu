@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Search, BookOpen, Play, Users, Clock, Star, Filter } from 'lucide-react';
+import { Search, BookOpen, Play, Users, Clock, Star, Filter, Bookmark } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '../lib/utils';
+import { useAppStore } from '../store/store';
+import { supabase } from '../supabase';
 
 const mockCourses = [
   {
@@ -63,9 +65,27 @@ const categories = [
 const levels = ['Все уровни', 'Начинающий', 'Средний', 'Продвинутый'];
 
 export default function EduHub() {
+  const { user } = useAppStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedLevel, setSelectedLevel] = useState('Все уровни');
+
+  const handleSaveCourse = async (course) => {
+    if (!user) return alert("Пожалуйста, войдите в систему, чтобы сохранять материалы.");
+    
+    try {
+      const { error } = await supabase.from('notes').insert([{
+        user_id: user.id,
+        content: `Сохраненный материал:\nКурс: ${course.title}\nАвтор: ${course.instructor}`
+      }]);
+      
+      if (error) throw error;
+      alert(`Курс "${course.title}" успешно сохранен в раздел Мероприятия!`);
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка при сохранении курса.");
+    }
+  };
 
   const filteredCourses = mockCourses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -203,10 +223,19 @@ export default function EduHub() {
                   ))}
                 </div>
 
-                <Button className="w-full">
-                  <Play size={16} className="mr-2" />
-                  Начать обучение
-                </Button>
+                <div className="flex gap-2">
+                  <Button className="flex-1 bg-gradient-to-r from-pink-500 to-lime-500 text-white border-0 hover:opacity-90">
+                    <Play size={16} className="mr-2" />
+                    Начать
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => handleSaveCourse(course)}
+                    className="px-3 border-pink-200 text-pink-500 hover:bg-pink-50"
+                  >
+                    <Bookmark size={20} />
+                  </Button>
+                </div>
               </div>
             </div>
           ))}
