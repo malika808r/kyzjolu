@@ -120,6 +120,11 @@ export default function MapView() {
   const [routePath, setRoutePath] = useState(null);
   const [safetyScore, setSafetyScore] = useState(null);
   const [activeNotification, setActiveNotification] = useState(null); // { id, type: 'sos', message }
+  
+  // ── Поиск и Маршруты ──
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchError, setSearchError] = useState(null);
 
   const sosTimerRef = useRef(null);
 
@@ -192,6 +197,29 @@ export default function MapView() {
     };
   }, [fetchReports, fetchActiveSOS, addSosAlert, user, t]);
 
+  // ── Геокодинг (Nominatim) ──
+  const searchAddress = async (query) => {
+    if (!query) return null;
+    setIsSearching(true);
+    setSearchError(null);
+    try {
+      // Ищем в Бишкеке для точности
+      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ' Бишкек')}&limit=1`;
+      const res = await fetch(url, { headers: { 'Accept-Language': i18n.language } });
+      const data = await res.json();
+      if (data && data.length > 0) {
+        return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+      }
+      setSearchError(t('map.errors.addressNotFound') || 'Адрес не найден');
+      return null;
+    } catch (err) {
+      setSearchError(t('map.errors.searchError') || 'Ошибка поиска');
+      return null;
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   // ── Виртуальная попутчица ──
   useEffect(() => {
     let timer;
@@ -208,17 +236,32 @@ export default function MapView() {
   // ── OSRM маршрут ──
   const fetchOSRMRoute = async (start, end) => {
     try {
-      const url = `https://router.project-osrm.org/route/v1/walking/${start[1]},${start[0]};${end[1]},${end[0]}?geometries=geojson`;
+      // Запрашиваем альтернативные маршруты (alternatives=true)
+      const url = `https://router.project-osrm.org/route/v1/walking/${start[1]},${start[0]};${end[1]},${end[0]}?geometries=geojson&alternatives=true`;
       const res = await fetch(url);
       const data = await res.json();
+      
       if (data.routes?.length > 0) {
-        const path = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
-        setRoutePath(path);
-        const score = calcSafetyScore(path, reports);
-        setSafetyScore(score);
-        return path;
+        // Если есть альтернативы, анализируем каждую на безопасность
+        let bestRoute = null;
+        let highestScore = -1;
+
+        for (const route of data.routes) {
+          const path = route.geometry.coordinates.map(c => [c[1], c[0]]);
+          const score = calcSafetyScore(path, reports);
+          
+          if (score > highestScore) {
+            highestScore = score;
+            bestRoute = path;
+          }
+        }
+
+        setRoutePath(bestRoute);
+        setSafetyScore(highestScore);
+        return bestRoute;
       }
-    } catch {
+    } catch (error) {
+      console.error("Routing error:", error);
       const path = [start, end];
       setRoutePath(path);
       setSafetyScore(calcSafetyScore(path, reports));
@@ -627,22 +670,44 @@ export default function MapView() {
                   <div className="w-3 h-3 rounded-full bg-lime-500" />
                   <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t('map.currentLocation')}</span>
                 </div>
-                <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
+                <div className="flex items-center gap-3 p-3.5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl relative">
                   <MapPin className="w-4 h-4 text-pink-500" />
-                  <input type="text" placeholder={t('map.destination')} className="flex-1 bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white placeholder:text-slate-400" />
+                  <input 
+                    type="text" 
+                    placeholder={t('map.destination')} 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        document.getElementById('build-route-btn')?.click();
+                      }
+                    }}
+                    className="flex-1 bg-transparent outline-none text-sm font-black text-slate-900 dark:text-white placeholder:text-slate-400" 
+                  />
+                  {isSearching && (
+                    <div className="absolute right-4 animate-spin rounded-full h-4 w-4 border-2 border-pink-500 border-t-transparent" />
+                  )}
                 </div>
               </div>
+
+              {searchError && (
+                <p className="text-[10px] text-red-500 font-bold mb-3 px-1">{searchError}</p>
+              )}
 
               {/* Кнопки */}
               <div className="flex gap-2 mb-5">
                 <button
+                  id="build-route-btn"
+                  disabled={isSearching || !searchQuery.trim()}
                   onClick={async () => {
-                    const end = [42.8780, 74.5800];
-                    await fetchOSRMRoute(bishkekCenter, end);
-                    setRouteActive(true);
-                    setSheetOpen(false);
+                    const coords = await searchAddress(searchQuery);
+                    if (coords) {
+                      await fetchOSRMRoute(bishkekCenter, coords);
+                      setRouteActive(true);
+                      setSheetOpen(false);
+                    }
                   }}
-                  className="flex-[2] py-3.5 bg-gradient-to-r from-pink-500 to-lime-500 text-white rounded-2xl font-bold shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+                  className="flex-[2] py-3.5 bg-gradient-to-r from-pink-500 to-lime-500 text-white rounded-2xl font-bold shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   <ShieldCheck size={18}/> {t('map.findSafeRoute')}
                 </button>
