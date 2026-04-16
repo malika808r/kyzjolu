@@ -236,14 +236,22 @@ export default function MapView() {
         if (data) contacts = data;
       }
       const mapsLink = `http://maps.google.com/maps?q=${lat},${lng}`;
-      const smsBody = encodeURIComponent(`SOS! Мне нужна помощь! Геопозиция: ${mapsLink}`);
+      const tSOS = t('map.sosAlert') || 'SOS! Мне нужна помощь!';
+      const smsBody = encodeURIComponent(`${tSOS} Геопозиция: ${mapsLink}`);
       
+      // Разные разделители для iOS и Android
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      const separator = isIOS ? ',' : ';';
+      const bodyPrefix = isIOS ? '&' : '?';
+
+      let smsUrl = 'sms:';
       if (contacts.length > 0) {
-        window.location.href = `sms:${contacts.map(c => c.phone).join(',')}?body=${smsBody}`;
-      } else {
-        // Если контакты не заданы, все равно открываем SMS приложение, чтобы пользователь мог ввести номер вручную
-        window.location.href = `sms:?body=${smsBody}`;
+        smsUrl += contacts.map(c => c.phone).join(separator);
       }
+      smsUrl += `${bodyPrefix}body=${smsBody}`;
+
+      // Открываем SMS приложение
+      window.location.href = smsUrl;
 
       if (navigator.onLine) triggerSOSBackend(lat, lng);
       setSosStatus('sent');
@@ -498,10 +506,20 @@ export default function MapView() {
             style={{ filter: 'blur(8px)' }}
           />
           <motion.button
-            onPointerDown={() => { sosTimerRef.current = setTimeout(triggerSOS, 1500); setSosStatus('locating'); }}
-            onPointerUp={() => { clearTimeout(sosTimerRef.current); if (sosStatus !== 'sent') setSosStatus('idle'); }}
-            onPointerLeave={() => { clearTimeout(sosTimerRef.current); if (sosStatus !== 'sent') setSosStatus('idle'); }}
-            className={`relative w-20 h-20 rounded-full shadow-2xl flex flex-col items-center justify-center text-white transition-colors duration-300 ${
+            onPointerDown={() => { 
+              // Начинаем поиск локации заранее
+              setSosStatus('locating');
+              sosTimerRef.current = setTimeout(triggerSOS, 1500); 
+            }}
+            onPointerUp={() => { 
+              clearTimeout(sosTimerRef.current); 
+              if (sosStatus !== 'sent') setSosStatus('idle'); 
+            }}
+            onPointerLeave={() => { 
+              clearTimeout(sosTimerRef.current); 
+              if (sosStatus !== 'sent') setSosStatus('idle'); 
+            }}
+            className={`relative w-20 h-20 rounded-full shadow-2xl flex flex-col items-center justify-center text-white outline-none active:scale-90 transition-all duration-300 ${
               sosStatus === 'sent' ? 'bg-green-500' :
               sosStatus === 'locating' ? 'bg-orange-500' :
               'bg-gradient-to-br from-red-500 to-red-600'
