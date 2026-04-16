@@ -1,16 +1,65 @@
-# React + Vite
+# Kyz Jolu (Кыз Жолу) 🌙
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Kyz Jolu** — это современное веб-приложение для обеспечения безопасности и взаимопомощи женщин в городской среде. Платформа объединяет краудсорсинговые данные о безопасности районов, систему экстренной помощи и социальную сеть для поддержки сообщества.
 
-Currently, two official plugins are available:
+## ✨ Основные функции
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 📍 **Интерактивная карта безопасности**:
+  - Отмечайте опасные зоны (нет освещения, подозрительные группы, плохая инфраструктура).
+  - Находите «Safe Havens» (безопасные места) — партнерские заведения, где можно получить помощь.
+  - Стройте безопасные маршруты с учетом рейтинга безопасности (Safety Score).
+- 🆘 **Система SOS**:
+  - Мгновенная активация сигнала тревоги удержанием кнопки.
+  - Автоматическая подготовка SMS для доверенных контактов с вашей точной геопозицией.
+  - Реальные уведомления другим пользователям поблизости для быстрой помощи.
+- 👭 **Сообщество**:
+  - Групповые чаты и комнаты для общения на важные темы.
+  - Kyz Hub — лента событий, волонтерских проектов и образовательных инициатив.
+- 🌍 **Многоязычность**: Полная поддержка русского, кыргызского и английского языков.
+- 🌓 **Темная и светлая темы**: Адаптивный интерфейс для комфортного использования в любое время суток.
 
-## React Compiler
+## 🛠 Технологический стек
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: [React](https://reactjs.org/) + [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) + [Framer Motion](https://www.framer.com/motion/) (анимации)
+- **Backend / DB**: [Supabase](https://supabase.com/) (Auth, PostgreSQL, Realtime)
+- **Maps**: [Leaflet](https://leafletjs.com/) + [React Leaflet](https://react-leaflet.js.org/)
+- **State Management**: [Zustand](https://github.com/pmndrs/zustand)
+- **Internationalization**: [i18next](https://www.i18next.com/)
 
-## Expanding the ESLint configuration
+## 🚀 Начало работы
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 1. Клонирование репозитория
+```bash
+git clone https://github.com/malika808r/kyzjolu.git
+cd kyzjolu
+```
+
+### 2. Установка зависимостей
+```bash
+npm install
+```
+
+### 3. Настройка окружения
+Создайте файл `.env.local` в корне проекта и добавьте ваши ключи Supabase:
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 4. Запуск в режиме разработки
+```bash
+npm run dev
+```
+
+## 📂 Структура проекта
+
+- `src/components` — переиспользуемые UI-компоненты.
+- `src/pages` — основные страницы приложения (Map, Profile, Hub и др.).
+- `src/store` — управление состоянием приложения (Zustand).
+- `src/i18n` — файлы локализации для трех языков.
+- `supabase/migrations` — SQL-скрипты для настройки таблиц и правил безопасности (RLS).
+
+## 📄 Лицензия
+
+Проект создан в рамках инициативы по повышению безопасности женщин. Все права защищены.

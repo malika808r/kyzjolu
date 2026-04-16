@@ -353,18 +353,26 @@ export default function MapView() {
   return (
     <div className="relative w-full h-full bg-gray-100 dark:bg-slate-900 overflow-hidden z-0 transition-colors">
 
-      {/* OVERLAY */}
+      {/* OVERLAY (только визуальный эффект, не должен блокировать клики по карте) */}
       <AnimatePresence>
         {isAddingReport && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="absolute inset-0 z-[1500] bg-black/40 backdrop-blur-sm"
-            onClick={() => setIsAddingReport(false)}
+            className="absolute inset-0 z-[1500] bg-black/20 backdrop-blur-[2px] pointer-events-none"
           />
         )}
       </AnimatePresence>
 
       {/* КАРТА */}
-      <MapContainer center={bishkekCenter} zoom={14} zoomControl={false} className="absolute inset-0 w-full h-full z-0">
+      <MapContainer 
+        center={bishkekCenter} 
+        zoom={14} 
+        zoomControl={false} 
+        dragging={true}
+        touchZoom={true}
+        doubleClickZoom={true}
+        scrollWheelZoom={true}
+        className="absolute inset-0 w-full h-full z-0"
+      >
         <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
         <MapClickHandler onMapClick={handleMapClick} />
 
