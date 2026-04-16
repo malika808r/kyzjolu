@@ -102,10 +102,18 @@ export const useAppStore = create((set, get) => ({
     }
   },
 
-  // ==========================================
   // 2. КАРТА И БЕЗОПАСНОСТЬ (MAP & SOS)
   // ==========================================
   markers: [],
+  sosAlerts: [],
+  
+  setSosAlerts: (alerts) => set({ sosAlerts: alerts }),
+  addSosAlert: (alert) => set((state) => ({ 
+    sosAlerts: [alert, ...state.sosAlerts.filter(a => a.id !== alert.id)] 
+  })),
+  removeSosAlert: (id) => set((state) => ({ 
+    sosAlerts: state.sosAlerts.filter(a => a.id !== id) 
+  })),
   
   fetchMarkers: async () => {
     const { data, error } = await supabase.from('map_markers').select('*');

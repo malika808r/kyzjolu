@@ -38,6 +38,17 @@ const createReportIcon = (category, icons) => {
   });
 };
 
+const createSosIcon = () => L.divIcon({
+  className: 'bg-transparent border-0',
+  html: `<div class="relative w-12 h-12 flex items-center justify-center">
+    <div class="absolute inset-0 rounded-full bg-red-600 animate-ping opacity-60"></div>
+    <div class="relative w-10 h-10 bg-red-600 rounded-full flex items-center justify-center shadow-xl border-4 border-white animate-pulse">
+      <span class="text-[10px] font-black text-white">SOS</span>
+    </div>
+  </div>`,
+  iconSize: [48, 48], iconAnchor: [24, 24]
+});
+
 // ────────────────────────────────────────────────
 // КОМПОНЕНТ ДЛЯ КЛИКА ПО КАРТЕ
 // ────────────────────────────────────────────────
@@ -85,7 +96,7 @@ const friends = [{ id: 1, name: 'Айдана', coords: [42.8780, 74.5800], imag
 // ────────────────────────────────────────────────
 export default function MapView() {
   const { t, i18n } = useTranslation();
-  const { triggerSOSBackend, user, addObservation } = useAppStore();
+  const { triggerSOSBackend, user, addObservation, sosAlerts, addSosAlert, setSosAlerts } = useAppStore();
 
   const CATEGORY_ICONS = {
     no_lighting:   { color: '#f59e0b', emoji: '💡', label: t('map.categories.no_lighting'),     bg: '#fef3c7' },
@@ -108,6 +119,7 @@ export default function MapView() {
   const [routeActive, setRouteActive] = useState(false);
   const [routePath, setRoutePath] = useState(null);
   const [safetyScore, setSafetyScore] = useState(null);
+  const [activeNotification, setActiveNotification] = useState(null); // { id, type: 'sos', message }
 
   const sosTimerRef = useRef(null);
 
@@ -135,8 +147,19 @@ export default function MapView() {
     setReportsLoading(false);
   }, []);
 
+  const fetchActiveSOS = useCallback(async () => {
+    // Получаем последние активные SOS за 24 часа
+    const { data, error } = await supabase
+      .from('sos_alerts')
+      .select('*')
+      .eq('status', 'active')
+      .gte('created_at', new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString());
+    if (!error && data) setSosAlerts(data);
+  }, [setSosAlerts]);
+
   useEffect(() => {
     fetchReports();
+    fetchActiveSOS();
 
     // Realtime: новые отчёты появляются без перезагрузки
     const channel = supabase.channel('safety_reports_realtime')
@@ -148,8 +171,17 @@ export default function MapView() {
     // SOS channel
     const sosChannel = supabase.channel('sos_alerts_channel')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'sos_alerts' }, payload => {
+        addSosAlert(payload.new);
+        
         if (payload.new.user_id !== user?.id) {
           if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+          setActiveNotification({
+            id: payload.new.id,
+            type: 'sos',
+            message: t('map.sosAlert')
+          });
+          // Авто-скрытие уведомления через 8 сек
+          setTimeout(() => setActiveNotification(null), 8000);
         }
       })
       .subscribe();
@@ -158,7 +190,7 @@ export default function MapView() {
       supabase.removeChannel(channel);
       supabase.removeChannel(sosChannel);
     };
-  }, [fetchReports]);
+  }, [fetchReports, fetchActiveSOS, addSosAlert, user, t]);
 
   // ── Виртуальная попутчица ──
   useEffect(() => {
@@ -205,11 +237,14 @@ export default function MapView() {
       }
       const mapsLink = `http://maps.google.com/maps?q=${lat},${lng}`;
       const smsBody = encodeURIComponent(`SOS! Мне нужна помощь! Геопозиция: ${mapsLink}`);
+      
       if (contacts.length > 0) {
         window.location.href = `sms:${contacts.map(c => c.phone).join(',')}?body=${smsBody}`;
-      } else if (!navigator.onLine) {
+      } else {
+        // Если контакты не заданы, все равно открываем SMS приложение, чтобы пользователь мог ввести номер вручную
         window.location.href = `sms:?body=${smsBody}`;
       }
+
       if (navigator.onLine) triggerSOSBackend(lat, lng);
       setSosStatus('sent');
       setTimeout(() => { setSosStatus('idle'); }, 5000);
@@ -331,6 +366,33 @@ export default function MapView() {
             <Popup><b>{f.name}</b></Popup>
           </Marker>
         ))}
+
+        {/* АКТИВНЫЕ SOS СИГНАЛЫ */}
+        {sosAlerts.filter(a => a.status === 'active').map(a => (
+          <Marker key={a.id} position={[a.lat, a.lng]} icon={createSosIcon()}>
+            <Popup>
+              <div className="flex flex-col items-center gap-2 p-1 text-center">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 animate-pulse">
+                  <ShieldAlert size={20} />
+                </div>
+                <div className="text-red-600 font-black text-sm uppercase leading-tight">
+                  {t('map.sosAlert')}
+                </div>
+                <div className="text-[10px] text-slate-600 font-bold">
+                  {new Date(a.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+                <a 
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${a.lat},${a.lng}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-1 w-full py-1.5 bg-red-600 text-white rounded-lg text-[10px] font-black uppercase tracking-wider shadow-sm"
+                >
+                  {t('map.helpNeeded')}
+                </a>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
 
       {/* ВЕРХНЯЯ ПАНЕЛЬ */}
@@ -367,6 +429,36 @@ export default function MapView() {
             <button onClick={() => { setCompanionActive(true); setTimeLeft(600); }}
               className="px-4 rounded-2xl bg-gradient-to-br from-pink-500 to-lime-500 text-white shadow-lg flex items-center gap-2 font-bold text-sm active:scale-95 transition-all">
               <Users size={18}/> {t('map.go')}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* УВЕДОМЛЕНИЕ О SOS */}
+      <AnimatePresence>
+        {activeNotification && (
+          <motion.div 
+            initial={{ y: -50, opacity: 0, scale: 0.9 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -20, opacity: 0, scale: 0.9 }}
+            className="absolute top-24 left-4 right-4 z-[2000] bg-red-600 text-white p-4 rounded-2xl shadow-2xl border-4 border-white dark:border-slate-800 flex items-center gap-4 cursor-pointer"
+            onClick={() => {
+              const alert = sosAlerts.find(a => a.id === activeNotification.id);
+              if (alert) {
+                // В будущем центрирование
+                setActiveNotification(null);
+              }
+            }}
+          >
+            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-red-600 shadow-inner flex-shrink-0 animate-pulse">
+              <ShieldAlert size={28} />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-black uppercase tracking-wider animate-bounce">{t('map.sosAlert')}</p>
+              <p className="text-xs font-bold opacity-90">{t('map.helpNeeded')}</p>
+            </div>
+            <button onClick={(e) => { e.stopPropagation(); setActiveNotification(null); }} className="w-8 h-8 flex items-center justify-center">
+              <X size={20} />
             </button>
           </motion.div>
         )}
