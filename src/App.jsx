@@ -2,30 +2,37 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppStore } from './store/store';
 
-// Компоненты
-import Welcome from './pages/Welcome';
+// Layouts & Auth
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthLayout from './components/Auth/AuthLayout';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+
+// Pages
+import Welcome from './pages/Welcome';
+import MapView from './pages/MapView';
+import Profile from './pages/Profile';
 import KyzHub from './pages/KyzHub';
 import CommunityRooms from './pages/CommunityRooms';
-import Profile from './pages/Profile';
-import NotFound from './pages/NotFound';
-import MapView from './pages/MapView';
 import Support from './pages/Support';
+import NotFound from './pages/NotFound';
+
+// Components
 import ChatInterface from './components/ChatInterface';
 import EventCreation from './components/EventCreation';
-export default function App() {
-  const { isInitializing, checkAuth } = useAppStore();
 
-  // Проверяем, залогинен ли пользователь при запуске
+export default function App() {
+  const { isInitializing, checkAuth, initAuthListener } = useAppStore();
+
   useEffect(() => {
     checkAuth();
-  }, []);
+    const { subscription } = initAuthListener();
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [checkAuth, initAuthListener]);
 
-  // Пока идет проверка, показываем красивый лоадер
   if (isInitializing) {
     return (
       <div className="flex items-center justify-center w-screen h-screen bg-[#F8F9FA]">
@@ -37,20 +44,19 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Главная страница (Welcome) */}
+        {/* Публичные маршруты */}
         <Route path="/" element={<Welcome />} />
         
-        {/* Авторизация */}
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
         
-        {/* Редиректы для старых ссылок */}
+        {/* Редиректы */}
         <Route path="/login" element={<Navigate to="/auth/login" replace />} />
         <Route path="/register" element={<Navigate to="/auth/register" replace />} />
 
-        {/* Защищенная зона приложения (только для авторизованных) */}
+        {/* Защищенная зона */}
         <Route path="/app" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route index element={<Navigate to="map" replace />} />
           <Route path="profile" element={<Profile />} />
@@ -62,7 +68,6 @@ export default function App() {
           <Route path="support" element={<Support />} />
         </Route>
         
-        {/* 404 Ошибка */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

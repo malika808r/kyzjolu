@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { supabase } from '../supabase';
+import i18n from '../i18n/config';
 
 export const useAppStore = create((set, get) => ({
   // ==========================================
@@ -17,6 +18,14 @@ export const useAppStore = create((set, get) => ({
       console.error('checkAuth error:', error);
       set({ isInitializing: false });
     }
+  },
+
+  initAuthListener: () => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session);
+      set({ user: session?.user || null, isInitializing: false });
+    });
+    return subscription;
   },
   
   login: async (email, password, demoUserData = null) => {
@@ -141,6 +150,7 @@ export const useAppStore = create((set, get) => ({
 
   setLanguage: (lang) => {
     localStorage.setItem('app-language', lang);
+    i18n.changeLanguage(lang);
     set({ language: lang });
   }
 }));

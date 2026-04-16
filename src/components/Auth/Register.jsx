@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../../store/store';
+import { useTranslation } from 'react-i18next';
+import { useAppStore } from '../../store/store';
 import { User, Mail, Lock, AlertCircle } from 'lucide-react';
 
 export default function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { register, loading } = useAuthStore();
+  const { register, loading } = useAppStore();
   
   const [formData, setFormData] = useState({
     firstName: '',

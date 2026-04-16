@@ -179,13 +179,13 @@ export default function Profile() {
           onClick={() => setActiveTab('profile')}
           className={`flex-1 py-2 font-bold text-[13px] rounded-2xl transition-all ${activeTab === 'profile' ? 'bg-white dark:bg-slate-700 shadow-sm text-pink-500' : 'text-slate-800 dark:text-slate-200'}`}
         >
-          Профиль
+          {t('profile.tabs.profile')}
         </button>
         <button
           onClick={() => setActiveTab('saved')}
           className={`flex-1 py-2 font-bold text-[13px] rounded-2xl transition-all ${activeTab === 'saved' ? 'bg-white dark:bg-slate-700 shadow-sm text-pink-500' : 'text-slate-800 dark:text-slate-200'}`}
         >
-          Сохраненное
+          {t('profile.tabs.saved')}
         </button>
       </div>
 
@@ -240,10 +240,10 @@ export default function Profile() {
               <div className="w-8 h-8 bg-red-100 dark:bg-red-900/40 rounded-xl flex items-center justify-center">
                 <Shield size={16} className="text-red-500" />
               </div>
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white">Доверенные контакты</h3>
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white">{t('profile.trustedContacts.title')}</h3>
             </div>
             <p className="text-xs text-slate-800 dark:text-slate-200 mb-4 font-medium">
-              При нажатии SOS им автоматически улетит SMS с твоей геопозицией.
+              {t('profile.trustedContacts.description')}
             </p>
 
             {/* Список контактов */}
@@ -255,7 +255,7 @@ export default function Profile() {
                   </div>
                 ) : trustedContacts.length === 0 ? (
                   <div className="p-4 text-center bg-white/50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-400 text-sm">
-                    Нет контактов — добавь первый 👇
+                    {t('profile.trustedContacts.empty')}
                   </div>
                 ) : (
                   trustedContacts.map(contact => (
@@ -291,10 +291,10 @@ export default function Profile() {
 
             {/* Форма добавления */}
             <div className="bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-2xl border border-slate-100 dark:border-slate-700 p-4 space-y-3">
-              <p className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Добавить контакт</p>
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">{t('profile.trustedContacts.addLabel')}</p>
               <input
                 type="text"
-                placeholder="Имя (напр. Мама)"
+                placeholder={t('profile.trustedContacts.namePlaceholder')}
                 value={newContactName}
                 onChange={e => setNewContactName(e.target.value)}
                 className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl outline-none text-sm font-medium text-slate-800 dark:text-white placeholder:text-slate-400 focus:ring-2 focus:ring-pink-200 dark:focus:ring-pink-800 transition-all border border-transparent focus:border-pink-200 dark:focus:border-pink-800"
@@ -302,7 +302,7 @@ export default function Profile() {
               <div className="flex gap-2">
                 <input
                   type="tel"
-                  placeholder="+7 (700) 000-00-00"
+                  placeholder={t('profile.trustedContacts.phonePlaceholder')}
                   value={newContactPhone}
                   onChange={e => setNewContactPhone(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && addContact()}

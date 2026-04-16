@@ -16,7 +16,7 @@ const ServiceCard = ({ icon: Icon, title, description, color, iconBg, badge }) =
         <h3 className="font-bold text-slate-800 dark:text-white text-[15px]">{title}</h3>
         {badge && (
           <span className="bg-pink-100 text-pink-600 text-[10px] font-black px-2 py-0.5 rounded-full tracking-wide">
-            НОВОЕ
+            {t('supportScreen.newBadge')}
           </span>
         )}
       </div>

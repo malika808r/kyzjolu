@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../supabase';
 import { FileText, Calendar, Plus, X, Heart, MessageCircle } from 'lucide-react';
 
 export default function SavedSection({ user }) {
+  const { t } = useTranslation();
   const [activeSubTab, setActiveSubTab] = useState('notes'); // notes | posts | profiles
   
   const [notes, setNotes] = useState([]);
@@ -34,7 +36,7 @@ export default function SavedSection({ user }) {
         image_url: saved.posts.image_url,
         likes_count: saved.posts.likes_count,
         comments_count: saved.posts.comments_count,
-        authorName: saved.posts.profiles?.first_name ? `${saved.posts.profiles.first_name} ${saved.posts.profiles.last_name || ''}` : 'Пользователь',
+        authorName: saved.posts.profiles?.first_name ? `${saved.posts.profiles.first_name} ${saved.posts.profiles.last_name || ''}` : t('feed.authorPlaceholder'),
         authorAvatar: (saved.posts.profiles?.avatar && saved.posts.profiles?.avatar !== '👤') ? saved.posts.profiles?.avatar : 'https://cdn-icons-png.flaticon.com/512/847/847969.png',
         time: new Date(saved.posts.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
       }));
@@ -77,9 +79,9 @@ export default function SavedSection({ user }) {
     <div className="space-y-4">
       {/* Под-вкладки */}
       <div className="flex bg-white/50 dark:bg-slate-800/50 p-1 rounded-2xl mx-5">
-        <button onClick={() => setActiveSubTab('notes')} className={`flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors ${activeSubTab === 'notes' ? 'bg-white dark:bg-slate-700 text-pink-500 shadow-sm' : 'text-slate-800 dark:text-slate-200 font-black uppercase tracking-wide'}`}>Мероприятия</button>
-        <button onClick={() => setActiveSubTab('posts')} className={`flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors ${activeSubTab === 'posts' ? 'bg-white dark:bg-slate-700 text-pink-500 shadow-sm' : 'text-slate-800 dark:text-slate-200 font-black uppercase tracking-wide'}`}>Посты</button>
-        <button onClick={() => setActiveSubTab('profiles')} className={`flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors ${activeSubTab === 'profiles' ? 'bg-white dark:bg-slate-700 text-pink-500 shadow-sm' : 'text-slate-800 dark:text-slate-200 font-black uppercase tracking-wide'}`}>Люди</button>
+        <button onClick={() => setActiveSubTab('notes')} className={`flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors ${activeSubTab === 'notes' ? 'bg-white dark:bg-slate-700 text-pink-500 shadow-sm' : 'text-slate-800 dark:text-slate-200 font-black uppercase tracking-wide'}`}>{t('profile.saved.tabs.notes')}</button>
+        <button onClick={() => setActiveSubTab('posts')} className={`flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors ${activeSubTab === 'posts' ? 'bg-white dark:bg-slate-700 text-pink-500 shadow-sm' : 'text-slate-800 dark:text-slate-200 font-black uppercase tracking-wide'}`}>{t('profile.saved.tabs.posts')}</button>
+        <button onClick={() => setActiveSubTab('profiles')} className={`flex-1 py-1.5 text-[13px] font-bold rounded-xl transition-colors ${activeSubTab === 'profiles' ? 'bg-white dark:bg-slate-700 text-pink-500 shadow-sm' : 'text-slate-800 dark:text-slate-200 font-black uppercase tracking-wide'}`}>{t('profile.saved.tabs.people')}</button>
       </div>
 
       <div className="px-5 pb-20">
@@ -92,12 +94,12 @@ export default function SavedSection({ user }) {
                  type="text" 
                  value={newNote}
                  onChange={(e) => setNewNote(e.target.value)}
-                 placeholder="Добавить мероприятие или план..." 
+                 placeholder={t('profile.saved.placeholders.note')} 
                  className="flex-1 bg-white dark:bg-slate-800 border-none px-4 py-3 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-pink-200 dark:focus:ring-pink-900 transition-shadow dark:text-white"
               />
               <button onClick={handleAddNote} className="bg-pink-500 text-white p-3 rounded-2xl active:scale-95 transition-transform"><Plus size={20} /></button>
             </div>
-            {notes.length === 0 && <p className="text-center text-sm text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest py-10">Тут будут ваши запланированные мероприятия 📅</p>}
+            {notes.length === 0 && <p className="text-center text-sm text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest py-10">{t('profile.saved.empty.notes')}</p>}
             {notes.map(note => (
               <div key={note.id} className="relative bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
                 <button onClick={() => handleDeleteNote(note.id)} className="absolute top-3 right-3 text-slate-700 hover:text-red-600 dark:text-slate-400 font-black"><X size={16} /></button>
@@ -110,7 +112,7 @@ export default function SavedSection({ user }) {
         {/* === ПОСТЫ === */}
         {activeSubTab === 'posts' && (
           <div className="space-y-4">
-            {savedPosts.length === 0 && <p className="text-center text-sm text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest py-10">Вы еще не сохраняли посты 🔖</p>}
+            {savedPosts.length === 0 && <p className="text-center text-sm text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest py-10">{t('profile.saved.empty.posts')}</p>}
             {savedPosts.map(post => (
               <div key={post.id} className="bg-white/80 dark:bg-slate-800/80 p-4 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-700">
                 <div className="flex gap-3 mb-2">
@@ -134,12 +136,12 @@ export default function SavedSection({ user }) {
         {/* === ЛЮДИ === */}
         {activeSubTab === 'profiles' && (
           <div className="grid grid-cols-2 gap-3">
-            {savedProfiles.length === 0 && <p className="col-span-2 text-center text-sm text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest py-10">Вы еще не сохраняли людей 👩‍💻</p>}
+            {savedProfiles.length === 0 && <p className="col-span-2 text-center text-sm text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest py-10">{t('profile.saved.empty.people')}</p>}
             {savedProfiles.map(p => (
               <div key={p.id} className="flex flex-col items-center p-4 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm text-center">
                 <img src={p.image} className="w-14 h-14 rounded-full object-cover mb-2 border-2 border-pink-100 dark:border-slate-600" />
                 <h3 className="text-sm font-bold text-slate-800 dark:text-white w-full truncate">{p.name}</h3>
-                <p className="text-[10px] text-pink-500 font-medium w-full truncate">{p.tags?.[0] || 'Пользователь'}</p>
+                <p className="text-[10px] text-pink-500 font-medium w-full truncate">{p.tags?.[0] || t('feed.authorPlaceholder')}</p>
               </div>
             ))}
           </div>

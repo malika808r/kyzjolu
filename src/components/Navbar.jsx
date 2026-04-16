@@ -8,9 +8,8 @@ export default function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   const navItems = [
-    { path: "/app/feed", icon: Home, label: t('nav.feed') },
     { path: "/app/map", icon: Map, label: t('nav.map') },
-    { path: "/app/eduhub", icon: BookOpen, label: t('nav.eduhub') },
+    { path: "/app/hub", icon: BookOpen, label: t('nav.eduhub') },
     { path: "/app/chats", icon: MessageCircle, label: t('nav.chats') },
     { path: "/app/profile", icon: User, label: t('nav.profile') },
   ];

@@ -52,6 +52,14 @@ const ru = {
     today: 'Сегодня',
     typeMessage: 'Написать сообщение...',
     online: 'В сети',
+    chats: 'Чаты',
+    newChat: 'Новый чат',
+    send: 'Отправить',
+    noChats: 'Чатов нет',
+    startConversation: 'Начните разговор',
+    globalRoom: 'Глобальная комната',
+    welcomeToCommunity: 'Добро пожаловать в комьюнити',
+    firstMessage: 'Напишите первое сообщение!',
   },
   supportScreen: {
     welcomeBack: 'С возвращением',
@@ -63,6 +71,7 @@ const ru = {
     ngoDesc: 'Программы поддержки, юридическая помощь и ресурсы от надежных организаций.',
     urgentHelp: 'Нужна срочная помощь?',
     available247: 'Поддержка доступна 24/7',
+    newBadge: 'НОВОЕ',
   },
   auth: {
     login: 'Вход',
@@ -110,6 +119,45 @@ const ru = {
     messageUser: 'Написать',
     addFriend: 'Добавить',
     messageSent: 'Сообщение отправлено',
+    save: 'Сохранить',
+    firstName: 'Имя',
+    lastName: 'Фамилия',
+    mySkills: 'Мои навыки',
+    myInterests: 'Мои интересы',
+    selectInterests: 'Выберите то, что вам интересно (поможет нам рекомендовать лучшее)',
+    uploadAvatar: 'Изменить фото',
+    myObservations: 'Мои наблюдения',
+    noObservations: 'У вас пока нет публикаций наблюдений.',
+    bioPlaceholder: 'Расскажите о себе...',
+    interestsPlaceholder: 'Добавить интерес (нажмите Enter)...',
+    tabs: {
+      profile: 'Профиль',
+      saved: 'Сохраненное',
+    },
+    trustedContacts: {
+      title: 'Доверенные контакты',
+      description: 'При нажатии SOS им автоматически улетит SMS с твоей геопозицией.',
+      info: 'При нажатии SOS им автоматически улетит SMS с твоей геопозицией.',
+      empty: 'Нет контактов — добавь первый 👇',
+      addLabel: 'Добавить контакт',
+      namePlaceholder: 'Имя (напр. Мама)',
+      phonePlaceholder: '+7 (700) 000-00-00',
+    },
+    saved: {
+      tabs: {
+        notes: 'Мероприятия',
+        posts: 'Посты',
+        people: 'Люди',
+      },
+      placeholders: {
+        note: 'Добавить мероприятие или план...',
+      },
+      empty: {
+        notes: 'Тут будут ваши запланированные мероприятия 📅',
+        posts: 'Вы еще не сохраняли посты 🔖',
+        people: 'Вы еще не сохраняли людей 👩‍💻',
+      }
+    }
   },
   feed: {
     writePost: 'О чём вы думаете?',
@@ -196,6 +244,8 @@ const ru = {
       dangerous: 'Небезопасный',
     },
     bravo: 'Браво!',
+    sosSent: 'Отправлено!',
+    holdSos: 'Удержи 1.5с',
     crowdsource: 'Краудсорс отчёты',
     beFirst: 'Пока нет отчётов. Будь первой!',
     member: 'Участница',
@@ -245,19 +295,6 @@ const ru = {
     },
     membersCount: 'участниц'
   },
-  profile: {
-    editProfile: 'Редактировать профиль',
-    save: 'Сохранить',
-    firstName: 'Имя',
-    lastName: 'Фамилия',
-    skills: 'Мои навыки',
-    interests: 'Мои интересы',
-    selectInterests: 'Выберите то, что вам интересно (поможет нам рекомендовать лучшее)',
-    uploadAvatar: 'Изменить фото',
-    myObservations: 'Мои наблюдения',
-    noObservations: 'У вас пока нет публикаций наблюдений.',
-  },
-
   events: {
     createEvent: 'Создать мероприятие',
     createDescription: 'Организуйте и поделитесь мероприятиями с сообществом KyzJolu',
@@ -276,18 +313,6 @@ const ru = {
     eventUpdated: 'Мероприятие обновлено',
     registeredSuccessfully: 'Вы зарегистрированы',
   },
-  chat: {
-    chats: 'Чаты',
-    newChat: 'Новый чат',
-    messages: 'Сообщения',
-    typeMessage: 'Напишите сообщение...',
-    send: 'Отправить',
-    noChats: 'Чатов нет',
-    startConversation: 'Начните разговор',
-    globalRoom: 'Глобальная комната',
-    welcomeToCommunity: 'Добро пожаловать в комьюнити',
-    firstMessage: 'Напишите первое сообщение!',
-  },
   education: {
     courses: 'Курсы',
     enroll: 'Записаться',
@@ -302,7 +327,6 @@ const ru = {
     noSpots: 'Мест нет',
     apply: 'Подать заявку',
     registered: 'Вы записаны',
-    enroll: 'Записаться',
     readMore: 'Читать подробнее',
     collapse: 'Свернуть',
     noEvents: 'Нет мероприятий в этой категории',
@@ -345,6 +369,25 @@ const ru = {
     rights: 'Все права защищены.',
     privacyPolicy: 'Политика конфиденциальности',
     termsOfUse: 'Условия использования'
+  },
+  admin: {
+    loading: 'Загрузка панели администратора...',
+    dashboard: 'Admin Dashboard',
+    subtitle: 'Панель управления и безопасности',
+    users: 'Пользователей',
+    posts: 'Постов',
+    sos: 'SOS сигналов',
+    moderation: 'На модерацию',
+    recentPosts: 'Недавние посты',
+    noPosts: 'Постов нет',
+    hide: 'Скрыть',
+    emergency: 'Экстренные контакты',
+    sosInfo: 'При срабатывании SOS кнопки:',
+    coordsSent: 'Координаты отправляются в диспетчерскую',
+    callTrusted: 'Звонок доверенному лицу',
+    adminNotify: '🚨 Уведомление администраторам',
+    autoUpdate: 'Панель обновляется автоматически. Последнее обновление:',
   }
 };
+
 export default ru;

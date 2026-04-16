@@ -1,5 +1,7 @@
-import { AlertCircle, Users, MessageSquare, AlertTriangle } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AlertCircle, Users, MessageSquare, AlertTriangle } from 'lucide-react';
+import { supabase } from '../supabase';
 
 export default function AdminPanel() {
   const { t, i18n } = useTranslation();
@@ -39,6 +41,12 @@ export default function AdminPanel() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getLocale = () => {
+    if (i18n.language === 'ky') return 'ky-KG';
+    if (i18n.language === 'ru') return 'ru-RU';
+    return 'en-US';
   };
 
   if (loading) {
@@ -111,7 +119,7 @@ export default function AdminPanel() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-slate-900 font-bold truncate">{post.content}</p>
                     <div className="flex gap-2 mt-2 text-[10px] text-slate-700 dark:text-slate-300 font-black uppercase tracking-widest mt-2">
-                      <span>📅 {new Date(post.created_at).toLocaleDateString(i18n.language === 'ru' ? 'ru-RU' : 'en-US')}</span>
+                      <span>📅 {new Date(post.created_at).toLocaleDateString(getLocale())}</span>
                       <span>👤 ID: {post.user_id.substring(0, 8)}</span>
                     </div>
                   </div>
@@ -139,7 +147,7 @@ export default function AdminPanel() {
 
       {/* Footer Note */}
       <div className="text-[10px] text-slate-800 dark:text-slate-200 text-center p-4 font-black uppercase tracking-widest">
-        {t('admin.autoUpdate')} {new Date().toLocaleTimeString(i18n.language === 'ru' ? 'ru-RU' : 'en-US')}
+        {t('admin.autoUpdate')} {new Date().toLocaleTimeString(getLocale())}
       </div>
     </div>
   );

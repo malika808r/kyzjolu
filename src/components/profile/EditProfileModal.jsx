@@ -95,11 +95,11 @@ export default function EditProfileModal({
             </div>
 
             <div>
-              <label className="text-xs font-black text-slate-800 dark:text-slate-200 mb-1 block uppercase tracking-wide">О себе</label>
+              <label className="text-xs font-black text-slate-800 dark:text-slate-200 mb-1 block uppercase tracking-wide">{t('profile.bio')}</label>
               <textarea 
                 value={profileData.bio || ''} 
                 onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
-                placeholder="Расскажите о себе..."
+                placeholder={t('profile.bioPlaceholder')}
                 className="w-full p-3 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl outline-none text-sm font-bold text-slate-900 dark:text-white focus:border-pink-500 min-h-[80px] resize-none transition-all placeholder:text-slate-400" 
               />
             </div>
@@ -137,7 +137,7 @@ export default function EditProfileModal({
                   value={interestInput} 
                   onChange={(e) => setInterestInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addInterest(); } }}
-                  placeholder="Добавить интерес (нажмите Enter)..."
+                  placeholder={t('profile.interestsPlaceholder')}
                   className="flex-1 p-2.5 bg-slate-50 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl outline-none text-sm font-bold text-slate-900 dark:text-white focus:border-pink-500 transition-all placeholder:text-slate-400"
                 />
                 <button type="button" onClick={addInterest} className="p-2.5 bg-pink-100 dark:bg-pink-900/50 text-pink-600 dark:text-pink-400 rounded-xl hover:bg-pink-200 dark:hover:bg-pink-900/70 transition-colors">

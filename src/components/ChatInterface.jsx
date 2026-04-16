@@ -5,6 +5,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 import { useAppStore } from '../store/store';
 
+export default function ChatInterface() {
+  const { t } = useTranslation();
+  const { user } = useAppStore();
+  const { roomId } = useParams();
+  const navigate = useNavigate();
+
   const roomInfoMap = {
     'home': { title: t('community.rooms.home.title'), color: 'text-pink-500' },
     'it': { title: t('community.rooms.it.title'), color: 'text-lime-500' },
@@ -13,17 +19,11 @@ import { useAppStore } from '../store/store';
     'general': { title: t('community.rooms.general.title'), color: 'text-indigo-500' }
   };
 
-export default function ChatInterface() {
-  const { t } = useTranslation();
-  const { user } = useAppStore();
-  const { roomId } = useParams();
-  const navigate = useNavigate();
-
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   
   const messagesEndRef = useRef(null);
-  const roomInfo = roomInfoMap[roomId] || { title: 'Комната', color: 'text-pink-500' };
+  const roomInfo = roomInfoMap[roomId] || { title: t('community.rooms.general.title'), color: 'text-pink-500' };
 
   useEffect(() => {
     if (user && roomId) {

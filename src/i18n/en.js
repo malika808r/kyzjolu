@@ -52,6 +52,14 @@ const en = {
     today: 'Today',
     typeMessage: 'Type a message...',
     online: 'Online',
+    chats: 'Chats',
+    newChat: 'New Chat',
+    send: 'Send',
+    noChats: 'No chats yet',
+    startConversation: 'Start a conversation',
+    globalRoom: 'Global Room',
+    welcomeToCommunity: 'Welcome to the community',
+    firstMessage: 'Write your first message!',
   },
   supportScreen: {
     welcomeBack: 'Welcome back',
@@ -63,6 +71,7 @@ const en = {
     ngoDesc: 'Support programs, legal aid, and resources from trusted organizations.',
     urgentHelp: 'Need urgent help?',
     available247: 'Support is available 24/7',
+    newBadge: 'NEW',
   },
   auth: {
     login: 'Login',
@@ -110,9 +119,45 @@ const en = {
     messageUser: 'Message',
     addFriend: 'Add Friend',
     messageSent: 'Message sent successfully',
-    addSkillPlaceholder: 'Add skill (press Enter)...',
-    addInterestPlaceholder: 'Add interest (press Enter)...',
+    save: 'Save',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    mySkills: 'My Skills',
+    myInterests: 'My Interests',
+    selectInterests: 'Select what you like (helps us recommend better content)',
+    uploadAvatar: 'Change Photo',
+    myObservations: 'My Observations',
+    noObservations: 'You have no published observations yet.',
     bioPlaceholder: 'Tell us about yourself...',
+    interestsPlaceholder: 'Add interest (press Enter)...',
+    tabs: {
+      profile: 'Profile',
+      saved: 'Saved',
+    },
+    trustedContacts: {
+      title: 'Trusted Contacts',
+      description: 'When SOS is pressed, an SMS with your location will be sent to them automatically.',
+      info: 'When SOS is pressed, an SMS with your location will be sent to them automatically.',
+      empty: 'No contacts yet — add your first one 👇',
+      addLabel: 'Add Contact',
+      namePlaceholder: 'Name (e.g. Mom)',
+      phonePlaceholder: '+1 (000) 000-0000',
+    },
+    saved: {
+      tabs: {
+        notes: 'Events',
+        posts: 'Posts',
+        people: 'People',
+      },
+      placeholders: {
+        note: 'Add an event or plan...',
+      },
+      empty: {
+        notes: 'Your planned events will appear here 📅',
+        posts: 'You haven\'t saved any posts yet 🔖',
+        people: 'You haven\'t saved any people yet 👩‍💻',
+      }
+    }
   },
   feed: {
     writePost: "What's on your mind?",
@@ -137,10 +182,6 @@ const en = {
     authorPlaceholder: 'User',
     justNow: 'Just now',
     errorPublish: 'Publishing error!',
-    loadingPost: 'Loading post...',
-    postNotFound: 'Post not found',
-    goBack: 'Go back',
-    backToFeed: 'Back to feed',
   },
   map: {
     sosAlert: '⚠️ ATTENTION! A girl nearby needs emergency help!',
@@ -196,7 +237,6 @@ const en = {
     safeRoute: 'Safe Route',
     analyzed: 'Analyzed',
     reportsNearby: 'girls\' reports nearby',
-    beFirst: 'No reports yet. Be the first!',
     nearby: 'nearby',
     score: {
       safe: 'Safe',
@@ -204,6 +244,11 @@ const en = {
       dangerous: 'Unsafe',
     },
     bravo: 'Sent!',
+    sosSent: 'Sent!',
+    holdSos: 'Hold 1.5s',
+    crowdsource: 'Crowdsource reports',
+    beFirst: 'No reports yet. Be the first!',
+    member: 'Member',
   },
   community: {
     welcome: 'Welcome back!',
@@ -250,19 +295,6 @@ const en = {
     },
     membersCount: 'members'
   },
-  profile: {
-    editProfile: 'Edit Profile',
-    save: 'Save',
-    firstName: 'First Name',
-    lastName: 'Last Name',
-    skills: 'My Skills',
-    interests: 'My Interests',
-    selectInterests: 'Select what you like (helps us recommend better content)',
-    uploadAvatar: 'Change Photo',
-    myObservations: 'My Observations',
-    noObservations: 'You have no published observations yet.',
-  },
-
   events: {
     createEvent: 'Create Event',
     createDescription: 'Organize and share events with the KyzJolu community',
@@ -281,18 +313,6 @@ const en = {
     eventUpdated: 'Event updated successfully',
     registeredSuccessfully: 'Registered successfully',
   },
-  chat: {
-    chats: 'Chats',
-    newChat: 'New Chat',
-    messages: 'Messages',
-    typeMessage: 'Type a message...',
-    send: 'Send',
-    noChats: 'No chats yet',
-    startConversation: 'Start a conversation',
-    globalRoom: 'Global Room',
-    welcomeToCommunity: 'Welcome to the community',
-    firstMessage: 'Write your first message!',
-  },
   education: {
     courses: 'Courses',
     enroll: 'Enroll',
@@ -307,7 +327,6 @@ const en = {
     noSpots: 'No spots',
     apply: 'Apply now',
     registered: 'Registered',
-    enroll: 'Enroll',
     readMore: 'Read more',
     collapse: 'Collapse',
     noEvents: 'No events in this category',
@@ -370,4 +389,5 @@ const en = {
     autoUpdate: 'Panel updates automatically. Last update:',
   }
 };
+
 export default en;

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../../store/store';
+import { useTranslation } from 'react-i18next';
+import { useAppStore } from '../../store/store';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 
 export default function Login() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { login, loading } = useAuthStore();
+  const { login, loading } = useAppStore();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
