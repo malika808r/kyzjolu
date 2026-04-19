@@ -126,7 +126,7 @@ const Layout = () => {
 
       <Sidebar expanded={expanded} onToggle={() => setExpanded(v => !v)} />
 
-      <main className="flex-1 relative min-w-0 h-full overflow-hidden">
+      <main className="flex-1 relative min-w-0 h-full overflow-y-auto">
         <Outlet />
       </main>
     </div>

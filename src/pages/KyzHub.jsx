@@ -19,31 +19,143 @@ const defaultStyle = { bg: 'from-slate-400 to-slate-500', tag: 'bg-slate-100 tex
 const MOCK_EVENTS = [
   {
     id: 'mock-1',
-    title: 'Основы React: Первый проект',
+    title: 'Technologies That Work for You: How to Organize Your Life Through Apps and AI',
     category: 'IT/Кодинг',
-    date: '2026-09-15',
+    date: '2026-06-05',
     time: '18:00',
-    location: 'Онлайн (Zoom)',
-    spots_total: 50,
-    participants_count: 38,
+    location: null,
+    spots_total: null,
+    participants_count: 0,
     is_online: true,
     contact_url: null,
-    description: 'Изучите основы разработки интерфейсов и создайте своё первое веб-приложение.',
-    image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80',
+    description: 'Modern technologies are powerful tools when used intentionally. This workshop helps you transform your devices from distraction sources into personal assistants.\n\nWhat we will cover:\n• Tools that actually help (planning, habit tracking, studying)\n• How to use AI for development, not just for cheating\n• Digital hygiene: how to stay focused, not just scroll\n• Balance: Online vs. Real life\n\nWorkshop practice:\n• Setting up 1–2 apps (planner or tracker)\n• Checklist "My useful digital habits"\n• Mini-case: how AI can help in studies and projects.',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
   },
   {
     id: 'mock-2',
-    title: 'Йога в парке для девушек',
-    category: 'Спорт',
-    date: '2026-09-20',
-    time: '09:00',
-    location: 'Центральный Парк',
-    spots_total: 20,
-    participants_count: 15,
-    is_online: false,
+    title: 'How Not to Burn Out in School and Social Media: Time Management Without Pressure',
+    category: 'Творчество',
+    date: '2026-06-10',
+    time: '15:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
     contact_url: null,
-    description: 'Утренняя йога-практика для расслабления и тонуса. Коврики предоставляются.',
-    image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80',
+    description: 'Feeling overwhelmed by school and social media? You are not alone. This course is about managing your energy and attention in a high-pressure world.\n\nWhat we will cover:\n• Why "there is not enough time" — analyzing the real reasons (overload and defocus)\n• How social media affects attention and self-esteem\n• Simple planning systems (flexible, not rigid)\n• How to distribute energy, not just time\n\nWorkshop practice:\n• Analyzing your typical day\n• Creating a mini-plan for the week (study + rest)\n• The "3 priorities instead of 10 tasks" exercise.',
+    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&q=80',
+  },
+  {
+    id: 'mock-3',
+    title: 'Mobile App Design: From Idea to Interactive Prototype',
+    category: 'IT/Кодинг',
+    date: '2026-06-12',
+    time: '18:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Ever had an idea for an app? Learn how to bring it to life! We will explore the basics of UI/UX design tailored for students.\n\nKey topics:\n• Understanding user needs\n• Creating wireframes and user flows\n• Intro to Figma: Designing your first screen\n• Prototyping interactions\n\nFinal goal: You will have a clickable prototype of your own app idea.',
+    image: 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?w=800&q=80',
+  },
+  {
+    id: 'mock-4',
+    title: 'Digital Art & Illustration: Finding Your Unique Style',
+    category: 'Творчество',
+    date: '2026-06-14',
+    time: '12:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Unleash your creativity in the digital world. Whether you use an iPad or a graphics tablet, this course will help you find your artistic voice.\n\nModules:\n• Tools of the trade (Procreate/Photoshop)\n• Color theory and composition in digital art\n• Character design fundamentals\n• Building an online portfolio as a young artist\n\nIncludes a speed-painting session and personalized feedback.',
+    image: 'https://images.unsplash.com/photo-1569144157591-c46755444ca1?w=800&q=80',
+  },
+  {
+    id: 'mock-5',
+    title: 'Self-Defense for Girls: Confidence and Awareness Training',
+    category: 'Спорт',
+    date: '2026-06-16',
+    time: '10:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Safety starts with confidence. This practical course combines physical techniques with mental preparedness.\n\nFocus areas:\n• Situational awareness: How to avoid danger professionally\n• Basic escape techniques and physical boundaries\n• Verbal self-defense and assertive communication\n• Building a "safety mindset" in the urban environment\n\nLed by certified instructors in a supportive environment.',
+    image: 'https://images.unsplash.com/photo-1555597673-b21d5c935865?w=800&q=80',
+  },
+  {
+    id: 'mock-6',
+    title: 'Yoga and Mindfulness for Academic Stress Relief',
+    category: 'Спорт',
+    date: '2026-06-18',
+    time: '09:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Feeling the pressure of exams and deadlines? Take a breath. This course helps you reconnect with your body and calm your mind.\n\nPractice includes:\n• Gentle vinyasa flow for physical tension release\n• Practical breathing techniques for focus\n• Guided meditation for stress reduction\n• Creating a sustainable "self-care" routine at home\n\nNo prior experience required.',
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=800&q=80',
+  },
+  {
+    id: 'mock-7',
+    title: 'Social Impact 101: How to Launch Your Own Grassroots Project',
+    category: 'Волонтёрство',
+    date: '2026-06-20',
+    time: '14:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Do you want to see change in your community? Learn how to make it happen. From identifying problems to implementing solutions.\n\nWhat we will cover:\n• Social entrepreneurship vs. volunteering\n• Grant writing basics for beginners\n• Recruiting and leading a volunteer team\n• Measuring your impact\n\nA practical guide to starting something that matters.',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80',
+  },
+  {
+    id: 'mock-8',
+    title: 'Public Speaking for Future Leaders: Pitching Your Ideas',
+    category: 'Волонтёрство',
+    date: '2026-06-22',
+    time: '16:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Become a powerful communicator. This workshop is designed to help you overcome stage fright and speak with confidence.\n\nKey skills:\n• Structuring a persuasive speech\n• Body language and vocal variety\n• Storytelling techniques for social causes\n• Handling Q&A with poise\n\nEvery participant will give a 2-minute "pitch" for a cause they believe in.',
+    image: 'https://images.unsplash.com/photo-1505373633132-ba7d7303cebb?w=800&q=80',
+  },
+  {
+    id: 'mock-9',
+    title: 'Healthy & Fast: Meal Prepping for a Busy School Week',
+    category: 'Кулинария',
+    date: '2026-06-24',
+    time: '11:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Stop relying on snacks and learn how to fuel your brain! This course teaches you how to prep delicious, healthy meals in under 2 hours for the whole week.\n\nHighlights:\n• Smart grocery shopping on a student budget\n• 5 core recipes with multiple variations\n• Storage tips to keep food fresh\n• Nutrition basics for energy and skin health\n\nIncludes a downloadable PDF recipe book.',
+    image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&q=80',
+  },
+  {
+    id: 'mock-10',
+    title: 'The Art of Pastry: Modern Desserts with Local Ingredients',
+    category: 'Кулинария',
+    date: '2026-06-26',
+    time: '13:00',
+    location: null,
+    spots_total: null,
+    participants_count: 0,
+    is_online: true,
+    contact_url: null,
+    description: 'Take your baking to the next level by understanding contemporary techniques and the chemistry of ingredients.\n\nTopics:\n• Texture analysis: From crispy to fluffy\n• Working with local fruits and berries in modern ways\n• Plate styling and presentation aesthetics\n• Building your brand as a young pastry chef\n\nGreat for aspiring entrepreneurs in the food industry.',
+    image: 'https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=800&q=80',
   },
 ];
 
@@ -78,10 +190,13 @@ export default function KyzHub() {
       .select('*')
       .order('date', { ascending: true });
 
-    if (!error && data && data.length > 0) {
-      setEvents(data);
+    if (!error && data) {
+      // Combine database events with high-quality mock courses
+      // We use a Map to prevent duplicate IDs if any exist
+      const combined = [...data, ...MOCK_EVENTS];
+      const uniqueEvents = Array.from(new Map(combined.map(item => [item.id, item])).values());
+      setEvents(uniqueEvents);
     } else {
-      // Fallback на mock если база пустая или ошибка
       setEvents(MOCK_EVENTS);
     }
     setLoading(false);
@@ -147,7 +262,7 @@ export default function KyzHub() {
   const spotsLeft = (e) => (e.spots_total || 50) - (e.participants_count || 0);
 
   return (
-    <div className="min-h-full w-full bg-gradient-to-br from-pink-50 to-lime-50 dark:from-slate-900 dark:to-slate-900 transition-colors p-4 md:p-8 overflow-y-auto pb-24">
+    <div className="min-h-full w-full bg-gradient-to-br from-pink-50 to-lime-50 dark:from-slate-900 dark:to-slate-900 transition-colors p-4 md:p-8 pb-32">
 
       {/* Заголовок */}
       <div className="mb-6">
@@ -237,16 +352,20 @@ export default function KyzHub() {
                       <span>{formatDate(event.date)}</span>
                       {event.time && <><Clock size={13} className="text-lime-500 ml-1 shrink-0" /><span>{event.time}</span></>}
                     </div>
-                    <div className="flex items-center text-xs text-slate-800 dark:text-slate-200 font-bold">
-                      <MapPin size={13} className="text-lime-500 shrink-0" />
-                      <span>{event.location || 'Бишкек'}</span>
-                    </div>
-                    <div className="flex items-center text-xs font-bold gap-2">
-                      <Users size={13} className={left <= 5 ? 'text-red-400' : 'text-lime-500'} />
-                      <span className={left <= 5 ? 'text-red-500' : 'text-slate-900 dark:text-slate-200 font-black'}>
-                        {left > 0 ? `${t('education.spotsLeft')}: ${left}` : t('education.noSpots')}
-                      </span>
-                    </div>
+                    {event.location && (
+                      <div className="flex items-center text-xs text-slate-800 dark:text-slate-200 font-bold">
+                        <MapPin size={13} className="text-lime-500 shrink-0" />
+                        <span>{event.location}</span>
+                      </div>
+                    )}
+                    {event.spots_total > 0 && (
+                      <div className="flex items-center text-xs font-bold gap-2">
+                        <Users size={13} className={left <= 5 ? 'text-red-400' : 'text-lime-500'} />
+                        <span className={left <= 5 ? 'text-red-500' : 'text-slate-900 dark:text-slate-200 font-black'}>
+                          {left > 0 ? `${t('education.spotsLeft')}: ${left}` : t('education.noSpots')}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Описание (раскрываемое) */}
